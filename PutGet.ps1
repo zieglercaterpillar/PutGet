@@ -1,10 +1,11 @@
 #3.0 - added multithreaded forms to support responsive progress bars
 #3.0 - finished Local and Remote Put
 #3.1 - All features fully implemented
-#3.2 - Bug fixes
+#3.2 - Bug fixes, added logo
 
 #######START MAIN FORM#######
 Add-Type -AssemblyName System.Windows.Forms
+[System.Windows.Forms.Application]::EnableVisualStyles()
 Add-Type -AssemblyName System.Drawing
 
 $form = New-Object System.Windows.Forms.Form
@@ -51,6 +52,12 @@ $listBox.Height = 70
 $form.Controls.Add($listBox)
 $form.Topmost = $true
 
+#icon
+$iconBase64 = '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAAgACADAREAAhEBAxEB/8QAGQABAAIDAAAAAAAAAAAAAAAACAEGAAUH/8QAMBAAAQMDAwEGAwkAAAAAAAAAAQIDBAAFBgcRMRIUFxghQZRU0dITIjJRVVZhcZH/xAAaAQACAwEBAAAAAAAAAAAAAAAFBwAEBgED/8QAKREAAQQBAgQGAwEAAAAAAAAAAQACAwQFETEVIZGhEhYyQVFSU9Hwgf/aAAwDAQACEQMRAD8A6Tk0t6345dZcZfQ+xEedbVtv0qCCQf8ARSKpxtksRsdsSB3WymcWxuI+ETO/nUT9fV7dr6aa/lnG/i7n9rNcRsfZR386h/uBXt2vpqeWcb+Luf2pxGx9kndLrzOyHArPdLk/9vMkNFTrnSE9R6iOB5elLPNV4692SKIaNB5dFoacjnwtc7dWlSUrSULSFJUNiCNwRQwHTmFYVI1KyPH9PcbduT9tgOSl7txWCynd1zb+uByaN4epZyFgRNcdPc6nkFTtyxwM8RA19katPsLuOrGZOF8lMYudonyEp2CEk/hHoCeAPlTHyuRixVQeHfZo/u6A1oHWZOf+piW23RbRAj2+CyliNHQG220jySkUoZpXyvMkh1J3WpYwMaGt2Ci6XOJZrdJuM55LMWM2XXVq4SkVIYXzSCKMak8guPeGNLnbBDjPMyn6q5klzrSzHU4GIbTrgShlBPKifIE8k/KnBjMfHi6mm53JG5P9sstYndZk16JI6eM4Xp/jjFqi5BZ1vH78l/tTe7zh5PPHoB+VLnLOvX7BmfE7T2Gh5BHqohgZ4Q4dVe4suPOjokxX2pDDg3Q40oKSofwR5Ggb2OY4teNCFda4OGoWh1EskzI8JvFpt6ULly45baStXSCdxyfSr2Jssr3I5pPSDzXhajMkTmN3KNXhx1A+Cg+7TTH82477HoUA4ZY+O6zw46gfBQfdpqebcd9j0KnDLHx3SS00sM3GMGtNouKEIlxWihxKFBQB6ieRzzS6zFmOzckmi9JPLoj1SN0cTWO3C//Z'
+$iconBytes = [Convert]::FromBase64String($iconBase64)
+$stream = [System.IO.MemoryStream]::new($iconBytes, 0, $iconBytes.Length)
+$form.Icon = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
+
 $result = $form.ShowDialog()
 
 if ($result -eq [System.Windows.Forms.DialogResult]::OK)
@@ -60,8 +67,14 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
 }
 else
 {
-    return -1
+    return
 }
+
+
+
+
+$stream.Dispose()
+$form.Dispose()
 #######END MAIN FORM#######
 
 ###START PUTGET###
@@ -104,6 +117,12 @@ if ($x -eq "Local Put")
 
     $form.Topmost = $true
 
+    #icon
+    $iconBase64 = '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAAgACADAREAAhEBAxEB/8QAGQABAAIDAAAAAAAAAAAAAAAACAEGAAUH/8QAMBAAAQMDAwEGAwkAAAAAAAAAAQIDBAAFBgcRMRIUFxghQZRU0dITIjJRVVZhcZH/xAAaAQACAwEBAAAAAAAAAAAAAAAFBwAEBgED/8QAKREAAQQBAgQGAwEAAAAAAAAAAQACAwQFETEVIZGhEhYyQVFSU9Hwgf/aAAwDAQACEQMRAD8A6Tk0t6345dZcZfQ+xEedbVtv0qCCQf8ARSKpxtksRsdsSB3WymcWxuI+ETO/nUT9fV7dr6aa/lnG/i7n9rNcRsfZR386h/uBXt2vpqeWcb+Luf2pxGx9kndLrzOyHArPdLk/9vMkNFTrnSE9R6iOB5elLPNV4692SKIaNB5dFoacjnwtc7dWlSUrSULSFJUNiCNwRQwHTmFYVI1KyPH9PcbduT9tgOSl7txWCynd1zb+uByaN4epZyFgRNcdPc6nkFTtyxwM8RA19katPsLuOrGZOF8lMYudonyEp2CEk/hHoCeAPlTHyuRixVQeHfZo/u6A1oHWZOf+piW23RbRAj2+CyliNHQG220jySkUoZpXyvMkh1J3WpYwMaGt2Ci6XOJZrdJuM55LMWM2XXVq4SkVIYXzSCKMak8guPeGNLnbBDjPMyn6q5klzrSzHU4GIbTrgShlBPKifIE8k/KnBjMfHi6mm53JG5P9sstYndZk16JI6eM4Xp/jjFqi5BZ1vH78l/tTe7zh5PPHoB+VLnLOvX7BmfE7T2Gh5BHqohgZ4Q4dVe4suPOjokxX2pDDg3Q40oKSofwR5Ggb2OY4teNCFda4OGoWh1EskzI8JvFpt6ULly45baStXSCdxyfSr2Jssr3I5pPSDzXhajMkTmN3KNXhx1A+Cg+7TTH82477HoUA4ZY+O6zw46gfBQfdpqebcd9j0KnDLHx3SS00sM3GMGtNouKEIlxWihxKFBQB6ieRzzS6zFmOzckmi9JPLoj1SN0cTWO3C//Z'
+    $iconBytes = [Convert]::FromBase64String($iconBase64)
+    $stream = [System.IO.MemoryStream]::new($iconBytes, 0, $iconBytes.Length)
+    $form.Icon = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
+
     $form.Add_Shown({$textBox.Select()})
     $result = $form.ShowDialog()
 
@@ -114,7 +133,7 @@ if ($x -eq "Local Put")
     }
     else
     {
-        return -1
+        return
     }
     ###END USERNAME FORM###
 
@@ -176,7 +195,7 @@ if ($x -eq "Local Put")
             $sourceappend += {\templates}
             $sourceappend += {\stickynotes}
             $sourceappend += {\personalcomm}
-            $sourceappend += {\stw network upload}
+            $sourceappend += {\stw network upload\}
             $sourceappend += {\Signatures}
             $sourceappend += {\type-ahead}
             $sourceappend += {\Chrome\Default}
@@ -204,7 +223,7 @@ if ($x -eq "Local Put")
             $options += {/R:1 /W:2 /E /NJS /NJH /NP}
             $options += {/R:1 /W:2 /E /NJS /NJH /NP /mt}
             $options += {*.NK2 /R:1 /W:2 /E /NJS /NJH /NP /mt}
-            $options += {/XD "%localappdata%\Google\Chrome\User Data\Default\Code Cache" /r:1 /w:2 /E /MT /NJS /NJH /NP}
+            $options += {/XD "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Code Cache" /r:1 /w:2 /E /MT /NJS /NJH /NP}
             $options += {/R:1 /W:2 /E /MT /NJS /NJH /NP}
             $options += {/r:1 /w:2 /E /MT /NJS /NJH /NP}
             $options += {/r:1 /w:2 /E /MT /NJS /NJH /NP}
@@ -245,11 +264,11 @@ if ($x -eq "Local Put")
             $sync.label.text="Copying IBM Files"
             if ((Get-CimInstance Win32_operatingsystem).OSArchitecture -eq "64-bit") 
             {
-                robocopy "%ProgramFiles(x86)%\ibm\client access\emulator\private" $source\private-programfiles /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy "$env:ProgramFiles(x86)\ibm\client access\emulator\private" $source\private-programfiles /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy "$env:APPDATA\IBM\Client Access\Emulator\private" $source\private /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
             } else 
             {
-                robocopy "%ProgramFiles%\ibm\client access\emulator\private" $source\private-programfiles /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy "$env:ProgramFiles\ibm\client access\emulator\private" $source\private-programfiles /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy "$env:APPDATA\IBM\Client Access\Emulator\private" $source\private /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
             }
 
@@ -259,8 +278,8 @@ if ($x -eq "Local Put")
             $sync.progressBar.Value = $pct
             $sync.label.text="Copying ET Files"
             if ((Get-CimInstance Win32_operatingsystem).OSArchitecture -eq "64-bit") {
-                robocopy "ProgramFiles(x86)\Caterpillar Electronic Technician\Files" $source\etreports-files /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
-                robocopy "ProgramFiles(x86)\Caterpillar Electronic Technician\Downloads" $source\etreports-downloads /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy "$env:ProgramFiles(x86)\Caterpillar Electronic Technician\Files" $source\etreports-files /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy "$env:ProgramFiles(x86)\Caterpillar Electronic Technician\Downloads" $source\etreports-downloads /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy "%public%\Caterpillar\Electronic Technician" $source\etreports-public /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
             } else {
                 robocopy "C:\Program Files\Caterpillar Electronic Technician\Files" $source\etreports-files /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
@@ -310,6 +329,12 @@ if ($x -eq "Local Put")
     $form.StartPosition = "CenterScreen"
     $form.FormBorderStyle = "FixedSingle"
     $form.MaximizeBox = $false
+
+    #icon
+    $iconBase64 = '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAAgACADAREAAhEBAxEB/8QAGQABAAIDAAAAAAAAAAAAAAAACAEGAAUH/8QAMBAAAQMDAwEGAwkAAAAAAAAAAQIDBAAFBgcRMRIUFxghQZRU0dITIjJRVVZhcZH/xAAaAQACAwEBAAAAAAAAAAAAAAAFBwAEBgED/8QAKREAAQQBAgQGAwEAAAAAAAAAAQACAwQFETEVIZGhEhYyQVFSU9Hwgf/aAAwDAQACEQMRAD8A6Tk0t6345dZcZfQ+xEedbVtv0qCCQf8ARSKpxtksRsdsSB3WymcWxuI+ETO/nUT9fV7dr6aa/lnG/i7n9rNcRsfZR386h/uBXt2vpqeWcb+Luf2pxGx9kndLrzOyHArPdLk/9vMkNFTrnSE9R6iOB5elLPNV4692SKIaNB5dFoacjnwtc7dWlSUrSULSFJUNiCNwRQwHTmFYVI1KyPH9PcbduT9tgOSl7txWCynd1zb+uByaN4epZyFgRNcdPc6nkFTtyxwM8RA19katPsLuOrGZOF8lMYudonyEp2CEk/hHoCeAPlTHyuRixVQeHfZo/u6A1oHWZOf+piW23RbRAj2+CyliNHQG220jySkUoZpXyvMkh1J3WpYwMaGt2Ci6XOJZrdJuM55LMWM2XXVq4SkVIYXzSCKMak8guPeGNLnbBDjPMyn6q5klzrSzHU4GIbTrgShlBPKifIE8k/KnBjMfHi6mm53JG5P9sstYndZk16JI6eM4Xp/jjFqi5BZ1vH78l/tTe7zh5PPHoB+VLnLOvX7BmfE7T2Gh5BHqohgZ4Q4dVe4suPOjokxX2pDDg3Q40oKSofwR5Ggb2OY4teNCFda4OGoWh1EskzI8JvFpt6ULly45baStXSCdxyfSr2Jssr3I5pPSDzXhajMkTmN3KNXhx1A+Cg+7TTH82477HoUA4ZY+O6zw46gfBQfdpqebcd9j0KnDLHx3SS00sM3GMGtNouKEIlxWihxKFBQB6ieRzzS6zFmOzckmi9JPLoj1SN0cTWO3C//Z'
+    $iconBytes = [Convert]::FromBase64String($iconBase64)
+    $stream = [System.IO.MemoryStream]::new($iconBytes, 0, $iconBytes.Length)
+    $form.Icon = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
 
     $button = New-Object Windows.Forms.Button
     $button.Location = New-Object Drawing.Point(5, 60)
@@ -384,6 +409,12 @@ elseif ($x -eq "Local Get")
     $textBox.Size = New-Object System.Drawing.Size(260,20)
     $form.Controls.Add($textBox)
 
+    #icon
+    $iconBase64 = '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAAgACADAREAAhEBAxEB/8QAGQABAAIDAAAAAAAAAAAAAAAACAEGAAUH/8QAMBAAAQMDAwEGAwkAAAAAAAAAAQIDBAAFBgcRMRIUFxghQZRU0dITIjJRVVZhcZH/xAAaAQACAwEBAAAAAAAAAAAAAAAFBwAEBgED/8QAKREAAQQBAgQGAwEAAAAAAAAAAQACAwQFETEVIZGhEhYyQVFSU9Hwgf/aAAwDAQACEQMRAD8A6Tk0t6345dZcZfQ+xEedbVtv0qCCQf8ARSKpxtksRsdsSB3WymcWxuI+ETO/nUT9fV7dr6aa/lnG/i7n9rNcRsfZR386h/uBXt2vpqeWcb+Luf2pxGx9kndLrzOyHArPdLk/9vMkNFTrnSE9R6iOB5elLPNV4692SKIaNB5dFoacjnwtc7dWlSUrSULSFJUNiCNwRQwHTmFYVI1KyPH9PcbduT9tgOSl7txWCynd1zb+uByaN4epZyFgRNcdPc6nkFTtyxwM8RA19katPsLuOrGZOF8lMYudonyEp2CEk/hHoCeAPlTHyuRixVQeHfZo/u6A1oHWZOf+piW23RbRAj2+CyliNHQG220jySkUoZpXyvMkh1J3WpYwMaGt2Ci6XOJZrdJuM55LMWM2XXVq4SkVIYXzSCKMak8guPeGNLnbBDjPMyn6q5klzrSzHU4GIbTrgShlBPKifIE8k/KnBjMfHi6mm53JG5P9sstYndZk16JI6eM4Xp/jjFqi5BZ1vH78l/tTe7zh5PPHoB+VLnLOvX7BmfE7T2Gh5BHqohgZ4Q4dVe4suPOjokxX2pDDg3Q40oKSofwR5Ggb2OY4teNCFda4OGoWh1EskzI8JvFpt6ULly45baStXSCdxyfSr2Jssr3I5pPSDzXhajMkTmN3KNXhx1A+Cg+7TTH82477HoUA4ZY+O6zw46gfBQfdpqebcd9j0KnDLHx3SS00sM3GMGtNouKEIlxWihxKFBQB6ieRzzS6zFmOzckmi9JPLoj1SN0cTWO3C//Z'
+    $iconBytes = [Convert]::FromBase64String($iconBase64)
+    $stream = [System.IO.MemoryStream]::new($iconBytes, 0, $iconBytes.Length)
+    $form.Icon = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
+
     $form.Topmost = $true
 
     $form.Add_Shown({$textBox.Select()})
@@ -396,7 +427,7 @@ elseif ($x -eq "Local Get")
     }
     else
     {
-        return -1
+        return
     }
     ###END USERNAME FORM###
 
@@ -458,7 +489,7 @@ elseif ($x -eq "Local Get")
             $sourceappend += {\templates}
             $sourceappend += {\stickynotes}
             $sourceappend += {\personalcomm}
-            $sourceappend += {\stw network upload}
+            $sourceappend += {\stw network upload\}
             $sourceappend += {\Signatures}
             $sourceappend += {\type-ahead}
             $sourceappend += {\Chrome\Default}
@@ -486,7 +517,7 @@ elseif ($x -eq "Local Get")
             $options += {/R:1 /W:2 /E /NJS /NJH /NP}
             $options += {/R:1 /W:2 /E /NJS /NJH /NP /mt}
             $options += {*.NK2 /R:1 /W:2 /E /NJS /NJH /NP /mt}
-            $options += {/XD "%localappdata%\Google\Chrome\User Data\Default\Code Cache" /r:1 /w:2 /E /MT /NJS /NJH /NP}
+            $options += {/XD "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Code Cache" /r:1 /w:2 /E /MT /NJS /NJH /NP}
             $options += {/R:1 /W:2 /E /MT /NJS /NJH /NP}
             $options += {/r:1 /w:2 /E /MT /NJS /NJH /NP}
             $options += {/r:1 /w:2 /E /MT /NJS /NJH /NP}
@@ -527,11 +558,11 @@ elseif ($x -eq "Local Get")
             $sync.label.text="Copying IBM Files"
             if ((Get-CimInstance Win32_operatingsystem).OSArchitecture -eq "64-bit") 
             {
-                robocopy $source\private-programfiles "%ProgramFiles(x86)%\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy $source\private-programfiles "$env:ProgramFiles(x86)\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy $source\private "$env:APPDATA\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
             } else 
             {
-                robocopy $source\private-programfiles "%ProgramFiles%\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy $source\private-programfiles "$env:ProgramFiles\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy $source\private "$env:APPDATA\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
             }
 
@@ -541,8 +572,8 @@ elseif ($x -eq "Local Get")
             $sync.progressBar.Value = $pct
             $sync.label.text="Copying ET Files"
             if ((Get-CimInstance Win32_operatingsystem).OSArchitecture -eq "64-bit") {
-                robocopy $source\etreports-files "%ProgramFiles(x86)%\Caterpillar Electronic Technician\Files" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
-                robocopy $source\etreports-downloads "%ProgramFiles(x86)%\Caterpillar Electronic Technician\Downloads" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy $source\etreports-files "$env:ProgramFiles(x86)\Caterpillar Electronic Technician\Files" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy $source\etreports-downloads "$env:ProgramFiles(x86)\Caterpillar Electronic Technician\Downloads" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy $source\etreports-public "%public%\Caterpillar\Electronic Technician" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
             } else {
                 robocopy $source\etreports-files "C:\Program Files\Caterpillar Electronic Technician\Files" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
@@ -592,6 +623,12 @@ elseif ($x -eq "Local Get")
     $form.StartPosition = "CenterScreen"
     $form.FormBorderStyle = "FixedSingle"
     $form.MaximizeBox = $false
+
+    #icon
+    $iconBase64 = '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAAgACADAREAAhEBAxEB/8QAGQABAAIDAAAAAAAAAAAAAAAACAEGAAUH/8QAMBAAAQMDAwEGAwkAAAAAAAAAAQIDBAAFBgcRMRIUFxghQZRU0dITIjJRVVZhcZH/xAAaAQACAwEBAAAAAAAAAAAAAAAFBwAEBgED/8QAKREAAQQBAgQGAwEAAAAAAAAAAQACAwQFETEVIZGhEhYyQVFSU9Hwgf/aAAwDAQACEQMRAD8A6Tk0t6345dZcZfQ+xEedbVtv0qCCQf8ARSKpxtksRsdsSB3WymcWxuI+ETO/nUT9fV7dr6aa/lnG/i7n9rNcRsfZR386h/uBXt2vpqeWcb+Luf2pxGx9kndLrzOyHArPdLk/9vMkNFTrnSE9R6iOB5elLPNV4692SKIaNB5dFoacjnwtc7dWlSUrSULSFJUNiCNwRQwHTmFYVI1KyPH9PcbduT9tgOSl7txWCynd1zb+uByaN4epZyFgRNcdPc6nkFTtyxwM8RA19katPsLuOrGZOF8lMYudonyEp2CEk/hHoCeAPlTHyuRixVQeHfZo/u6A1oHWZOf+piW23RbRAj2+CyliNHQG220jySkUoZpXyvMkh1J3WpYwMaGt2Ci6XOJZrdJuM55LMWM2XXVq4SkVIYXzSCKMak8guPeGNLnbBDjPMyn6q5klzrSzHU4GIbTrgShlBPKifIE8k/KnBjMfHi6mm53JG5P9sstYndZk16JI6eM4Xp/jjFqi5BZ1vH78l/tTe7zh5PPHoB+VLnLOvX7BmfE7T2Gh5BHqohgZ4Q4dVe4suPOjokxX2pDDg3Q40oKSofwR5Ggb2OY4teNCFda4OGoWh1EskzI8JvFpt6ULly45baStXSCdxyfSr2Jssr3I5pPSDzXhajMkTmN3KNXhx1A+Cg+7TTH82477HoUA4ZY+O6zw46gfBQfdpqebcd9j0KnDLHx3SS00sM3GMGtNouKEIlxWihxKFBQB6ieRzzS6zFmOzckmi9JPLoj1SN0cTWO3C//Z'
+    $iconBytes = [Convert]::FromBase64String($iconBase64)
+    $stream = [System.IO.MemoryStream]::new($iconBytes, 0, $iconBytes.Length)
+    $form.Icon = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
 
     $button = New-Object Windows.Forms.Button
     $button.Location = New-Object Drawing.Point(5, 60)
@@ -664,6 +701,12 @@ elseif ($x -eq "Remote Put")
     $textBox.Size = New-Object System.Drawing.Size(260,20)
     $form.Controls.Add($textBox)
 
+    #icon
+    $iconBase64 = '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAAgACADAREAAhEBAxEB/8QAGQABAAIDAAAAAAAAAAAAAAAACAEGAAUH/8QAMBAAAQMDAwEGAwkAAAAAAAAAAQIDBAAFBgcRMRIUFxghQZRU0dITIjJRVVZhcZH/xAAaAQACAwEBAAAAAAAAAAAAAAAFBwAEBgED/8QAKREAAQQBAgQGAwEAAAAAAAAAAQACAwQFETEVIZGhEhYyQVFSU9Hwgf/aAAwDAQACEQMRAD8A6Tk0t6345dZcZfQ+xEedbVtv0qCCQf8ARSKpxtksRsdsSB3WymcWxuI+ETO/nUT9fV7dr6aa/lnG/i7n9rNcRsfZR386h/uBXt2vpqeWcb+Luf2pxGx9kndLrzOyHArPdLk/9vMkNFTrnSE9R6iOB5elLPNV4692SKIaNB5dFoacjnwtc7dWlSUrSULSFJUNiCNwRQwHTmFYVI1KyPH9PcbduT9tgOSl7txWCynd1zb+uByaN4epZyFgRNcdPc6nkFTtyxwM8RA19katPsLuOrGZOF8lMYudonyEp2CEk/hHoCeAPlTHyuRixVQeHfZo/u6A1oHWZOf+piW23RbRAj2+CyliNHQG220jySkUoZpXyvMkh1J3WpYwMaGt2Ci6XOJZrdJuM55LMWM2XXVq4SkVIYXzSCKMak8guPeGNLnbBDjPMyn6q5klzrSzHU4GIbTrgShlBPKifIE8k/KnBjMfHi6mm53JG5P9sstYndZk16JI6eM4Xp/jjFqi5BZ1vH78l/tTe7zh5PPHoB+VLnLOvX7BmfE7T2Gh5BHqohgZ4Q4dVe4suPOjokxX2pDDg3Q40oKSofwR5Ggb2OY4teNCFda4OGoWh1EskzI8JvFpt6ULly45baStXSCdxyfSr2Jssr3I5pPSDzXhajMkTmN3KNXhx1A+Cg+7TTH82477HoUA4ZY+O6zw46gfBQfdpqebcd9j0KnDLHx3SS00sM3GMGtNouKEIlxWihxKFBQB6ieRzzS6zFmOzckmi9JPLoj1SN0cTWO3C//Z'
+    $iconBytes = [Convert]::FromBase64String($iconBase64)
+    $stream = [System.IO.MemoryStream]::new($iconBytes, 0, $iconBytes.Length)
+    $form.Icon = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
+
     $form.Topmost = $true
 
     $form.Add_Shown({$textBox.Select()})
@@ -675,7 +718,7 @@ elseif ($x -eq "Remote Put")
     }
     else
     {
-        return -1
+        return
     }
     ###END IP FORM###
 
@@ -715,7 +758,7 @@ elseif ($x -eq "Remote Put")
             $destinations += {"C:\Program Files\Ziegler"}
             $destinations += {"$env:APPDATA\Microsoft\Signatures"}
             $destinations += {"$env:APPDATA\Microsoft\Outlook"}
-            $destinations += {"%localappdata%\Google\Chrome\User Data\Default"}
+            $destinations += {"$env:LOCALAPPDATA\Google\Chrome\User Data\Default"}
             $destinations += {"$env:APPDATA\Mozilla\Firefox"}
             $destinations += {"C:\ProgramData\Caterpillar\SIMS DBS Upload Utility"}
             $destinations += {"$env:APPDATA\microsoft\windows\recent\automaticdestinations"}
@@ -737,7 +780,7 @@ elseif ($x -eq "Remote Put")
             $sourceappend += {\templates}
             $sourceappend += {\stickynotes}
             $sourceappend += {\personalcomm}
-            $sourceappend += {\stw network upload}
+            $sourceappend += {\stw network upload\}
             $sourceappend += {\Signatures}
             $sourceappend += {\type-ahead}
             $sourceappend += {\Chrome\Default}
@@ -765,7 +808,7 @@ elseif ($x -eq "Remote Put")
             $options += {/R:1 /W:2 /E /NJS /NJH /NP}
             $options += {/R:1 /W:2 /E /NJS /NJH /NP /mt}
             $options += {*.NK2 /R:1 /W:2 /E /NJS /NJH /NP /mt}
-            $options += {/XD "%localappdata%\Google\Chrome\User Data\Default\Code Cache" /r:1 /w:2 /E /MT /NJS /NJH /NP}
+            $options += {/XD "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Code Cache" /r:1 /w:2 /E /MT /NJS /NJH /NP}
             $options += {/R:1 /W:2 /E /MT /NJS /NJH /NP}
             $options += {/r:1 /w:2 /E /MT /NJS /NJH /NP}
             $options += {/r:1 /w:2 /E /MT /NJS /NJH /NP}
@@ -806,11 +849,11 @@ elseif ($x -eq "Remote Put")
             $sync.label.text="Copying IBM Files"
             if ((Get-CimInstance Win32_operatingsystem).OSArchitecture -eq "64-bit") 
             {
-                robocopy "%ProgramFiles(x86)%\ibm\client access\emulator\private" $source\private-programfiles /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy "$env:ProgramFiles(x86)\ibm\client access\emulator\private" $source\private-programfiles /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy "$env:APPDATA\IBM\Client Access\Emulator\private" $source\private /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
             } else 
             {
-                robocopy "%ProgramFiles%\ibm\client access\emulator\private" $source\private-programfiles /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy "$env:ProgramFiles\ibm\client access\emulator\private" $source\private-programfiles /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy "$env:APPDATA\IBM\Client Access\Emulator\private" $source\private /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
             }
 
@@ -821,8 +864,8 @@ elseif ($x -eq "Remote Put")
             $sync.progressBar.Value = $pct
             $sync.label.text="Copying ET Files"
             if ((Get-CimInstance Win32_operatingsystem).OSArchitecture -eq "64-bit") {
-                robocopy "ProgramFiles(x86)\Caterpillar Electronic Technician\Files" $source\etreports-files /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
-                robocopy "ProgramFiles(x86)\Caterpillar Electronic Technician\Downloads" $source\etreports-downloads /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy "$env:ProgramFiles(x86)\Caterpillar Electronic Technician\Files" $source\etreports-files /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy "$env:ProgramFiles(x86)\Caterpillar Electronic Technician\Downloads" $source\etreports-downloads /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy "%public%\Caterpillar\Electronic Technician" $source\etreports-public /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
             } else {
                 robocopy "C:\Program Files\Caterpillar Electronic Technician\Files" $source\etreports-files /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
@@ -871,6 +914,12 @@ elseif ($x -eq "Remote Put")
     $form.StartPosition = "CenterScreen"
     $form.FormBorderStyle = "FixedSingle"
     $form.MaximizeBox = $false
+
+    #icon
+    $iconBase64 = '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAAgACADAREAAhEBAxEB/8QAGQABAAIDAAAAAAAAAAAAAAAACAEGAAUH/8QAMBAAAQMDAwEGAwkAAAAAAAAAAQIDBAAFBgcRMRIUFxghQZRU0dITIjJRVVZhcZH/xAAaAQACAwEBAAAAAAAAAAAAAAAFBwAEBgED/8QAKREAAQQBAgQGAwEAAAAAAAAAAQACAwQFETEVIZGhEhYyQVFSU9Hwgf/aAAwDAQACEQMRAD8A6Tk0t6345dZcZfQ+xEedbVtv0qCCQf8ARSKpxtksRsdsSB3WymcWxuI+ETO/nUT9fV7dr6aa/lnG/i7n9rNcRsfZR386h/uBXt2vpqeWcb+Luf2pxGx9kndLrzOyHArPdLk/9vMkNFTrnSE9R6iOB5elLPNV4692SKIaNB5dFoacjnwtc7dWlSUrSULSFJUNiCNwRQwHTmFYVI1KyPH9PcbduT9tgOSl7txWCynd1zb+uByaN4epZyFgRNcdPc6nkFTtyxwM8RA19katPsLuOrGZOF8lMYudonyEp2CEk/hHoCeAPlTHyuRixVQeHfZo/u6A1oHWZOf+piW23RbRAj2+CyliNHQG220jySkUoZpXyvMkh1J3WpYwMaGt2Ci6XOJZrdJuM55LMWM2XXVq4SkVIYXzSCKMak8guPeGNLnbBDjPMyn6q5klzrSzHU4GIbTrgShlBPKifIE8k/KnBjMfHi6mm53JG5P9sstYndZk16JI6eM4Xp/jjFqi5BZ1vH78l/tTe7zh5PPHoB+VLnLOvX7BmfE7T2Gh5BHqohgZ4Q4dVe4suPOjokxX2pDDg3Q40oKSofwR5Ggb2OY4teNCFda4OGoWh1EskzI8JvFpt6ULly45baStXSCdxyfSr2Jssr3I5pPSDzXhajMkTmN3KNXhx1A+Cg+7TTH82477HoUA4ZY+O6zw46gfBQfdpqebcd9j0KnDLHx3SS00sM3GMGtNouKEIlxWihxKFBQB6ieRzzS6zFmOzckmi9JPLoj1SN0cTWO3C//Z'
+    $iconBytes = [Convert]::FromBase64String($iconBase64)
+    $stream = [System.IO.MemoryStream]::new($iconBytes, 0, $iconBytes.Length)
+    $form.Icon = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
 
     $button = New-Object Windows.Forms.Button
     $button.Location = New-Object Drawing.Point(5, 60)
@@ -945,6 +994,12 @@ elseif ($x -eq "Remote Get")
     $textBox.Size = New-Object System.Drawing.Size(260,20)
     $form.Controls.Add($textBox)
 
+    #icon
+    $iconBase64 = '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAAgACADAREAAhEBAxEB/8QAGQABAAIDAAAAAAAAAAAAAAAACAEGAAUH/8QAMBAAAQMDAwEGAwkAAAAAAAAAAQIDBAAFBgcRMRIUFxghQZRU0dITIjJRVVZhcZH/xAAaAQACAwEBAAAAAAAAAAAAAAAFBwAEBgED/8QAKREAAQQBAgQGAwEAAAAAAAAAAQACAwQFETEVIZGhEhYyQVFSU9Hwgf/aAAwDAQACEQMRAD8A6Tk0t6345dZcZfQ+xEedbVtv0qCCQf8ARSKpxtksRsdsSB3WymcWxuI+ETO/nUT9fV7dr6aa/lnG/i7n9rNcRsfZR386h/uBXt2vpqeWcb+Luf2pxGx9kndLrzOyHArPdLk/9vMkNFTrnSE9R6iOB5elLPNV4692SKIaNB5dFoacjnwtc7dWlSUrSULSFJUNiCNwRQwHTmFYVI1KyPH9PcbduT9tgOSl7txWCynd1zb+uByaN4epZyFgRNcdPc6nkFTtyxwM8RA19katPsLuOrGZOF8lMYudonyEp2CEk/hHoCeAPlTHyuRixVQeHfZo/u6A1oHWZOf+piW23RbRAj2+CyliNHQG220jySkUoZpXyvMkh1J3WpYwMaGt2Ci6XOJZrdJuM55LMWM2XXVq4SkVIYXzSCKMak8guPeGNLnbBDjPMyn6q5klzrSzHU4GIbTrgShlBPKifIE8k/KnBjMfHi6mm53JG5P9sstYndZk16JI6eM4Xp/jjFqi5BZ1vH78l/tTe7zh5PPHoB+VLnLOvX7BmfE7T2Gh5BHqohgZ4Q4dVe4suPOjokxX2pDDg3Q40oKSofwR5Ggb2OY4teNCFda4OGoWh1EskzI8JvFpt6ULly45baStXSCdxyfSr2Jssr3I5pPSDzXhajMkTmN3KNXhx1A+Cg+7TTH82477HoUA4ZY+O6zw46gfBQfdpqebcd9j0KnDLHx3SS00sM3GMGtNouKEIlxWihxKFBQB6ieRzzS6zFmOzckmi9JPLoj1SN0cTWO3C//Z'
+    $iconBytes = [Convert]::FromBase64String($iconBase64)
+    $stream = [System.IO.MemoryStream]::new($iconBytes, 0, $iconBytes.Length)
+    $form.Icon = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
+
     $form.Topmost = $true
 
     $form.Add_Shown({$textBox.Select()})
@@ -956,7 +1011,7 @@ elseif ($x -eq "Remote Get")
     }
     else
     {
-        return -1
+        return
     }
     ###END IP FORM###
 
@@ -996,7 +1051,7 @@ elseif ($x -eq "Remote Get")
             $destinations += {"C:\Program Files\Ziegler"}
             $destinations += {"$env:APPDATA\Microsoft\Signatures"}
             $destinations += {"$env:APPDATA\Microsoft\Outlook"}
-            $destinations += {"%localappdata%\Google\Chrome\User Data\Default"}
+            $destinations += {"$env:LOCALAPPDATA\Google\Chrome\User Data\Default"}
             $destinations += {"$env:APPDATA\Mozilla\Firefox"}
             $destinations += {"C:\ProgramData\Caterpillar\SIMS DBS Upload Utility"}
             $destinations += {"$env:APPDATA\microsoft\windows\recent\automaticdestinations"}
@@ -1018,7 +1073,7 @@ elseif ($x -eq "Remote Get")
             $sourceappend += {\templates}
             $sourceappend += {\stickynotes}
             $sourceappend += {\personalcomm}
-            $sourceappend += {\stw network upload}
+            $sourceappend += {\stw network upload\}
             $sourceappend += {\Signatures}
             $sourceappend += {\type-ahead}
             $sourceappend += {\Chrome\Default}
@@ -1046,7 +1101,7 @@ elseif ($x -eq "Remote Get")
             $options += {/R:1 /W:2 /E /NJS /NJH /NP}
             $options += {/R:1 /W:2 /E /NJS /NJH /NP /mt}
             $options += {*.NK2 /R:1 /W:2 /E /NJS /NJH /NP /mt}
-            $options += {/XD "%localappdata%\Google\Chrome\User Data\Default\Code Cache" /r:1 /w:2 /E /MT /NJS /NJH /NP}
+            $options += {/XD "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Code Cache" /r:1 /w:2 /E /MT /NJS /NJH /NP}
             $options += {/R:1 /W:2 /E /MT /NJS /NJH /NP}
             $options += {/r:1 /w:2 /E /MT /NJS /NJH /NP}
             $options += {/r:1 /w:2 /E /MT /NJS /NJH /NP}
@@ -1087,11 +1142,11 @@ elseif ($x -eq "Remote Get")
             $sync.label.text="Copying IBM Files"
             if ((Get-CimInstance Win32_operatingsystem).OSArchitecture -eq "64-bit") 
             {
-                robocopy $source\private-programfiles "%ProgramFiles(x86)%\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy $source\private-programfiles "$env:ProgramFiles(x86)\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy $source\private "$env:APPDATA\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
             } else 
             {
-                robocopy $source\private-programfiles "%ProgramFiles%\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy $source\private-programfiles "$env:ProgramFiles\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy $source\private "$env:APPDATA\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
             }
 
@@ -1101,8 +1156,8 @@ elseif ($x -eq "Remote Get")
             $sync.progressBar.Value = $pct
             $sync.label.text="Copying ET Files"
             if ((Get-CimInstance Win32_operatingsystem).OSArchitecture -eq "64-bit") {
-                robocopy $source\etreports-files "%ProgramFiles(x86)%\Caterpillar Electronic Technician\Files" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
-                robocopy $source\etreports-downloads "%ProgramFiles(x86)%\Caterpillar Electronic Technician\Downloads" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy $source\etreports-files "$env:ProgramFiles(x86)\Caterpillar Electronic Technician\Files" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy $source\etreports-downloads "$env:ProgramFiles(x86)\Caterpillar Electronic Technician\Downloads" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy $source\etreports-public "%public%\Caterpillar\Electronic Technician" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
             } else {
                 robocopy $source\etreports-files "C:\Program Files\Caterpillar Electronic Technician\Files" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
@@ -1153,6 +1208,12 @@ elseif ($x -eq "Remote Get")
     $form.StartPosition = "CenterScreen"
     $form.FormBorderStyle = "FixedSingle"
     $form.MaximizeBox = $false
+
+    #icon
+    $iconBase64 = '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAAgACADAREAAhEBAxEB/8QAGQABAAIDAAAAAAAAAAAAAAAACAEGAAUH/8QAMBAAAQMDAwEGAwkAAAAAAAAAAQIDBAAFBgcRMRIUFxghQZRU0dITIjJRVVZhcZH/xAAaAQACAwEBAAAAAAAAAAAAAAAFBwAEBgED/8QAKREAAQQBAgQGAwEAAAAAAAAAAQACAwQFETEVIZGhEhYyQVFSU9Hwgf/aAAwDAQACEQMRAD8A6Tk0t6345dZcZfQ+xEedbVtv0qCCQf8ARSKpxtksRsdsSB3WymcWxuI+ETO/nUT9fV7dr6aa/lnG/i7n9rNcRsfZR386h/uBXt2vpqeWcb+Luf2pxGx9kndLrzOyHArPdLk/9vMkNFTrnSE9R6iOB5elLPNV4692SKIaNB5dFoacjnwtc7dWlSUrSULSFJUNiCNwRQwHTmFYVI1KyPH9PcbduT9tgOSl7txWCynd1zb+uByaN4epZyFgRNcdPc6nkFTtyxwM8RA19katPsLuOrGZOF8lMYudonyEp2CEk/hHoCeAPlTHyuRixVQeHfZo/u6A1oHWZOf+piW23RbRAj2+CyliNHQG220jySkUoZpXyvMkh1J3WpYwMaGt2Ci6XOJZrdJuM55LMWM2XXVq4SkVIYXzSCKMak8guPeGNLnbBDjPMyn6q5klzrSzHU4GIbTrgShlBPKifIE8k/KnBjMfHi6mm53JG5P9sstYndZk16JI6eM4Xp/jjFqi5BZ1vH78l/tTe7zh5PPHoB+VLnLOvX7BmfE7T2Gh5BHqohgZ4Q4dVe4suPOjokxX2pDDg3Q40oKSofwR5Ggb2OY4teNCFda4OGoWh1EskzI8JvFpt6ULly45baStXSCdxyfSr2Jssr3I5pPSDzXhajMkTmN3KNXhx1A+Cg+7TTH82477HoUA4ZY+O6zw46gfBQfdpqebcd9j0KnDLHx3SS00sM3GMGtNouKEIlxWihxKFBQB6ieRzzS6zFmOzckmi9JPLoj1SN0cTWO3C//Z'
+    $iconBytes = [Convert]::FromBase64String($iconBase64)
+    $stream = [System.IO.MemoryStream]::new($iconBytes, 0, $iconBytes.Length)
+    $form.Icon = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
 
     $button = New-Object Windows.Forms.Button
     $button.Location = New-Object Drawing.Point(5, 60)
@@ -1227,6 +1288,12 @@ elseif ($x -eq "Remote Get w/ Delete")
     $textBox.Size = New-Object System.Drawing.Size(260,20)
     $form.Controls.Add($textBox)
 
+    #icon
+    $iconBase64 = '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAAgACADAREAAhEBAxEB/8QAGQABAAIDAAAAAAAAAAAAAAAACAEGAAUH/8QAMBAAAQMDAwEGAwkAAAAAAAAAAQIDBAAFBgcRMRIUFxghQZRU0dITIjJRVVZhcZH/xAAaAQACAwEBAAAAAAAAAAAAAAAFBwAEBgED/8QAKREAAQQBAgQGAwEAAAAAAAAAAQACAwQFETEVIZGhEhYyQVFSU9Hwgf/aAAwDAQACEQMRAD8A6Tk0t6345dZcZfQ+xEedbVtv0qCCQf8ARSKpxtksRsdsSB3WymcWxuI+ETO/nUT9fV7dr6aa/lnG/i7n9rNcRsfZR386h/uBXt2vpqeWcb+Luf2pxGx9kndLrzOyHArPdLk/9vMkNFTrnSE9R6iOB5elLPNV4692SKIaNB5dFoacjnwtc7dWlSUrSULSFJUNiCNwRQwHTmFYVI1KyPH9PcbduT9tgOSl7txWCynd1zb+uByaN4epZyFgRNcdPc6nkFTtyxwM8RA19katPsLuOrGZOF8lMYudonyEp2CEk/hHoCeAPlTHyuRixVQeHfZo/u6A1oHWZOf+piW23RbRAj2+CyliNHQG220jySkUoZpXyvMkh1J3WpYwMaGt2Ci6XOJZrdJuM55LMWM2XXVq4SkVIYXzSCKMak8guPeGNLnbBDjPMyn6q5klzrSzHU4GIbTrgShlBPKifIE8k/KnBjMfHi6mm53JG5P9sstYndZk16JI6eM4Xp/jjFqi5BZ1vH78l/tTe7zh5PPHoB+VLnLOvX7BmfE7T2Gh5BHqohgZ4Q4dVe4suPOjokxX2pDDg3Q40oKSofwR5Ggb2OY4teNCFda4OGoWh1EskzI8JvFpt6ULly45baStXSCdxyfSr2Jssr3I5pPSDzXhajMkTmN3KNXhx1A+Cg+7TTH82477HoUA4ZY+O6zw46gfBQfdpqebcd9j0KnDLHx3SS00sM3GMGtNouKEIlxWihxKFBQB6ieRzzS6zFmOzckmi9JPLoj1SN0cTWO3C//Z'
+    $iconBytes = [Convert]::FromBase64String($iconBase64)
+    $stream = [System.IO.MemoryStream]::new($iconBytes, 0, $iconBytes.Length)
+    $form.Icon = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
+
     $form.Topmost = $true
 
     $form.Add_Shown({$textBox.Select()})
@@ -1238,7 +1305,7 @@ elseif ($x -eq "Remote Get w/ Delete")
     }
     else
     {
-        return -1
+        return
     }
     ###END IP FORM###
 
@@ -1279,7 +1346,7 @@ elseif ($x -eq "Remote Get w/ Delete")
             $destinations += {"C:\Program Files\Ziegler"}
             $destinations += {"$env:APPDATA\Microsoft\Signatures"}
             $destinations += {"$env:APPDATA\Microsoft\Outlook"}
-            $destinations += {"%localappdata%\Google\Chrome\User Data\Default"}
+            $destinations += {"$env:LOCALAPPDATA\Google\Chrome\User Data\Default"}
             $destinations += {"$env:APPDATA\Mozilla\Firefox"}
             $destinations += {"C:\ProgramData\Caterpillar\SIMS DBS Upload Utility"}
             $destinations += {"$env:APPDATA\microsoft\windows\recent\automaticdestinations"}
@@ -1301,7 +1368,7 @@ elseif ($x -eq "Remote Get w/ Delete")
             $sourceappend += {\templates}
             $sourceappend += {\stickynotes}
             $sourceappend += {\personalcomm}
-            $sourceappend += {\stw network upload}
+            $sourceappend += {\stw network upload\}
             $sourceappend += {\Signatures}
             $sourceappend += {\type-ahead}
             $sourceappend += {\Chrome\Default}
@@ -1329,7 +1396,7 @@ elseif ($x -eq "Remote Get w/ Delete")
             $options += {/R:1 /W:2 /E /NJS /NJH /NP}
             $options += {/R:1 /W:2 /E /NJS /NJH /NP /mt}
             $options += {*.NK2 /R:1 /W:2 /E /NJS /NJH /NP /mt}
-            $options += {/XD "%localappdata%\Google\Chrome\User Data\Default\Code Cache" /r:1 /w:2 /E /MT /NJS /NJH /NP}
+            $options += {/XD "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Code Cache" /r:1 /w:2 /E /MT /NJS /NJH /NP}
             $options += {/R:1 /W:2 /E /MT /NJS /NJH /NP}
             $options += {/r:1 /w:2 /E /MT /NJS /NJH /NP}
             $options += {/r:1 /w:2 /E /MT /NJS /NJH /NP}
@@ -1371,11 +1438,11 @@ elseif ($x -eq "Remote Get w/ Delete")
             $sync.label.text="Copying IBM Files"
             if ((Get-CimInstance Win32_operatingsystem).OSArchitecture -eq "64-bit") 
             {
-                robocopy $source\private-programfiles "%ProgramFiles(x86)%\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy $source\private-programfiles "$env:ProgramFiles(x86)\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy $source\private "$env:APPDATA\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
             } else 
             {
-                robocopy $source\private-programfiles "%ProgramFiles%\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy $source\private-programfiles "$env:ProgramFiles\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy $source\private "$env:APPDATA\IBM\Client Access\Emulator\Private" /R:1 /W:2 /E /MT /NJS /NJH /NP >> c:\Utilities\pglog.txt
             }
 
@@ -1385,8 +1452,8 @@ elseif ($x -eq "Remote Get w/ Delete")
             $sync.progressBar.Value = $pct
             $sync.label.text="Copying ET Files"
             if ((Get-CimInstance Win32_operatingsystem).OSArchitecture -eq "64-bit") {
-                robocopy $source\etreports-files "%ProgramFiles(x86)%\Caterpillar Electronic Technician\Files" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
-                robocopy $source\etreports-downloads "%ProgramFiles(x86)%\Caterpillar Electronic Technician\Downloads" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy $source\etreports-files "$env:ProgramFiles(x86)\Caterpillar Electronic Technician\Files" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
+                robocopy $source\etreports-downloads "$env:ProgramFiles(x86)\Caterpillar Electronic Technician\Downloads" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
                 robocopy $source\etreports-public "%public%\Caterpillar\Electronic Technician" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
             } else {
                 robocopy $source\etreports-files "C:\Program Files\Caterpillar Electronic Technician\Files" /R:1 /W:2 /E /NJS /NJH /NP >> c:\Utilities\pglog.txt
@@ -1437,6 +1504,12 @@ elseif ($x -eq "Remote Get w/ Delete")
     $form.StartPosition = "CenterScreen"
     $form.FormBorderStyle = "FixedSingle"
     $form.MaximizeBox = $false
+
+    #icon
+    $iconBase64 = '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAAgACADAREAAhEBAxEB/8QAGQABAAIDAAAAAAAAAAAAAAAACAEGAAUH/8QAMBAAAQMDAwEGAwkAAAAAAAAAAQIDBAAFBgcRMRIUFxghQZRU0dITIjJRVVZhcZH/xAAaAQACAwEBAAAAAAAAAAAAAAAFBwAEBgED/8QAKREAAQQBAgQGAwEAAAAAAAAAAQACAwQFETEVIZGhEhYyQVFSU9Hwgf/aAAwDAQACEQMRAD8A6Tk0t6345dZcZfQ+xEedbVtv0qCCQf8ARSKpxtksRsdsSB3WymcWxuI+ETO/nUT9fV7dr6aa/lnG/i7n9rNcRsfZR386h/uBXt2vpqeWcb+Luf2pxGx9kndLrzOyHArPdLk/9vMkNFTrnSE9R6iOB5elLPNV4692SKIaNB5dFoacjnwtc7dWlSUrSULSFJUNiCNwRQwHTmFYVI1KyPH9PcbduT9tgOSl7txWCynd1zb+uByaN4epZyFgRNcdPc6nkFTtyxwM8RA19katPsLuOrGZOF8lMYudonyEp2CEk/hHoCeAPlTHyuRixVQeHfZo/u6A1oHWZOf+piW23RbRAj2+CyliNHQG220jySkUoZpXyvMkh1J3WpYwMaGt2Ci6XOJZrdJuM55LMWM2XXVq4SkVIYXzSCKMak8guPeGNLnbBDjPMyn6q5klzrSzHU4GIbTrgShlBPKifIE8k/KnBjMfHi6mm53JG5P9sstYndZk16JI6eM4Xp/jjFqi5BZ1vH78l/tTe7zh5PPHoB+VLnLOvX7BmfE7T2Gh5BHqohgZ4Q4dVe4suPOjokxX2pDDg3Q40oKSofwR5Ggb2OY4teNCFda4OGoWh1EskzI8JvFpt6ULly45baStXSCdxyfSr2Jssr3I5pPSDzXhajMkTmN3KNXhx1A+Cg+7TTH82477HoUA4ZY+O6zw46gfBQfdpqebcd9j0KnDLHx3SS00sM3GMGtNouKEIlxWihxKFBQB6ieRzzS6zFmOzckmi9JPLoj1SN0cTWO3C//Z'
+    $iconBytes = [Convert]::FromBase64String($iconBase64)
+    $stream = [System.IO.MemoryStream]::new($iconBytes, 0, $iconBytes.Length)
+    $form.Icon = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
 
     $button = New-Object Windows.Forms.Button
     $button.Location = New-Object Drawing.Point(5, 60)
